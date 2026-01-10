@@ -2,9 +2,13 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const session = require("express-session");
 const bcrypt = require("bcryptjs");
+const path = require("path");
 
 const app = express();
+
+/* ===== MIDDLEWARE ===== */
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use(express.static("public"));   // 👈 theme/css enable
 
 app.use(session({
   secret: "adzduniya_secret_key",
@@ -12,23 +16,16 @@ app.use(session({
   saveUninitialized: false
 }));
 
-// ===== ADMIN CREDENTIALS =====
+/* ===== ADMIN CREDENTIALS ===== */
 const ADMIN_EMAIL = "earnfast1258000@gmail.com";
 const ADMIN_PASSWORD_HASH = bcrypt.hashSync("earnfast1258000@", 10);
 
-// ===== LOGIN PAGE =====
+/* ===== LOGIN PAGE (THEME) ===== */
 app.get("/admin-login", (req, res) => {
-  res.send(`
-    <h2>adzduniya Admin Login</h2>
-    <form method="POST">
-      <input name="email" placeholder="Gmail" required /><br><br>
-      <input name="password" type="password" placeholder="Password" required /><br><br>
-      <button>Login</button>
-    </form>
-  `);
+  res.sendFile(path.join(__dirname, "public", "login.html"));
 });
 
-// ===== LOGIN HANDLE =====
+/* ===== LOGIN HANDLE ===== */
 app.post("/admin-login", (req, res) => {
   const { email, password } = req.body;
 
@@ -45,7 +42,7 @@ app.post("/admin-login", (req, res) => {
   res.redirect("/admin");
 });
 
-// ===== DASHBOARD (protected) =====
+/* ===== DASHBOARD (protected) ===== */
 app.get("/admin", (req, res) => {
   if (!req.session.admin) return res.redirect("/admin-login");
 
@@ -56,17 +53,17 @@ app.get("/admin", (req, res) => {
   `);
 });
 
-// ===== LOGOUT =====
+/* ===== LOGOUT ===== */
 app.get("/logout", (req, res) => {
   req.session.destroy(() => {
     res.redirect("/admin-login");
   });
 });
 
-// ===== HOME =====
+/* ===== HOME ===== */
 app.get("/", (req, res) => {
   res.send("adzduniya server running");
 });
 
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => console.log("Server started"));
+app.listen(PORT, () => console.log("Server started on " + PORT));

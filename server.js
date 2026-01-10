@@ -3,6 +3,7 @@ const bodyParser = require("body-parser");
 const session = require("express-session");
 const bcrypt = require("bcryptjs");
 const path = require("path");
+const mongoose = require("mongoose");
 
 const app = express();
 
@@ -15,6 +16,10 @@ app.use(session({
   resave: false,
   saveUninitialized: false
 }));
+
+mongoose.connect(process.env.MONGO_URL)
+  .then(() => console.log("MongoDB Connected ✅"))
+  .catch(err => console.log("MongoDB Error ❌", err));
 
 /* ===== ADMIN CREDENTIALS ===== */
 const ADMIN_EMAIL = "earnfast1258000@gmail.com";

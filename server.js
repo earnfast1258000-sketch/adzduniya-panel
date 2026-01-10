@@ -8,7 +8,7 @@ const app = express();
 
 /* ===== MIDDLEWARE ===== */
 app.use(bodyParser.urlencoded({ extended: true }));
-app.use(express.static("public"));   // 👈 theme/css enable
+app.use(express.static("public"));
 
 app.use(session({
   secret: "adzduniya_secret_key",
@@ -20,7 +20,7 @@ app.use(session({
 const ADMIN_EMAIL = "earnfast1258000@gmail.com";
 const ADMIN_PASSWORD_HASH = bcrypt.hashSync("earnfast1258000@", 10);
 
-/* ===== LOGIN PAGE (THEME) ===== */
+/* ===== LOGIN PAGE ===== */
 app.get("/admin-login", (req, res) => {
   res.sendFile(path.join(__dirname, "public", "login.html"));
 });
@@ -29,35 +29,35 @@ app.get("/admin-login", (req, res) => {
 app.post("/admin-login", (req, res) => {
   const { email, password } = req.body;
 
-  if (email !== ADMIN_EMAIL) {
-    return res.send("Invalid email");
-  }
+  if (email !== ADMIN_EMAIL) return res.send("Invalid email");
 
   const ok = bcrypt.compareSync(password, ADMIN_PASSWORD_HASH);
-  if (!ok) {
-    return res.send("Wrong password");
-  }
+  if (!ok) return res.send("Wrong password");
 
   req.session.admin = true;
   res.redirect("/admin");
 });
 
-/* ===== DASHBOARD (protected) ===== */
+/* ===== DASHBOARD ===== */
 app.get("/admin", (req, res) => {
   if (!req.session.admin) return res.redirect("/admin-login");
+  res.sendFile(path.join(__dirname, "public", "dashboard.html"));
+});
 
-  res.send(`
-    <h1>Welcome to adzduniya Admin Panel</h1>
-    <p>Login Successful ✅</p>
-    <a href="/logout">Logout</a>
-  `);
+/* ===== ADD OFFER ===== */
+app.get("/add-offer", (req, res) => {
+  if (!req.session.admin) return res.redirect("/admin-login");
+  res.sendFile(path.join(__dirname, "public", "add-offer.html"));
+});
+
+app.post("/add-offer", (req, res) => {
+  const { name, url } = req.body;
+  res.send(`Offer Added ✅<br>Name: ${name}<br>URL: ${url}<br><a href="/admin">Back</a>`);
 });
 
 /* ===== LOGOUT ===== */
 app.get("/logout", (req, res) => {
-  req.session.destroy(() => {
-    res.redirect("/admin-login");
-  });
+  req.session.destroy(() => res.redirect("/admin-login"));
 });
 
 /* ===== HOME ===== */
@@ -65,5 +65,6 @@ app.get("/", (req, res) => {
   res.send("adzduniya server running");
 });
 
+/* ===== START ===== */
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log("Server started on " + PORT));

@@ -17,9 +17,19 @@ app.use(session({
   saveUninitialized: false
 }));
 
+/* ===== MONGODB CONNECT ===== */
 mongoose.connect(process.env.MONGO_URL)
   .then(() => console.log("MongoDB Connected ✅"))
   .catch(err => console.log("MongoDB Error ❌", err));
+
+/* ===== OFFER MODEL (IMPORTANT) ===== */
+const OfferSchema = new mongoose.Schema({
+  name: String,
+  url: String,
+  createdAt: { type: Date, default: Date.now }
+});
+
+const Offer = mongoose.model("Offer", OfferSchema);
 
 /* ===== ADMIN CREDENTIALS ===== */
 const ADMIN_EMAIL = "earnfast1258000@gmail.com";
@@ -44,9 +54,29 @@ app.post("/admin-login", (req, res) => {
 });
 
 /* ===== DASHBOARD ===== */
-app.get("/admin", (req, res) => {
+app.get("/admin", async (req, res) => {
   if (!req.session.admin) return res.redirect("/admin-login");
-  res.sendFile(path.join(__dirname, "public", "dashboard.html"));
+
+  const offers = await Offer.find().sort({ createdAt: -1 });
+
+  let html = `
+    <h1>adzduniya Admin Panel</h1>
+    <a href="/add-offer">➕ Add Offer</a> |
+    <a href="/logout">Logout</a>
+    <hr>
+  `;
+
+  if (offers.length === 0) {
+    html += "<p>No offers yet</p>";
+  } else {
+    html += "<ul>";
+    offers.forEach(o => {
+      html += `<li><b>${o.name}</b> - ${o.url}</li>`;
+    });
+    html += "</ul>";
+  }
+
+  res.send(html);
 });
 
 /* ===== ADD OFFER ===== */
@@ -55,9 +85,12 @@ app.get("/add-offer", (req, res) => {
   res.sendFile(path.join(__dirname, "public", "add-offer.html"));
 });
 
-app.post("/add-offer", (req, res) => {
+app.post("/add-offer", async (req, res) => {
   const { name, url } = req.body;
-  res.send(`Offer Added ✅<br>Name: ${name}<br>URL: ${url}<br><a href="/admin">Back</a>`);
+
+  await Offer.create({ name, url });
+
+  res.send(`Offer Added & Saved in Database ✅<br><a href="/admin">Back to dashboard</a>`);
 });
 
 /* ===== LOGOUT ===== */

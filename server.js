@@ -62,29 +62,9 @@ app.post("/admin-login", (req, res) => {
 });
 
 /* ===== DASHBOARD ===== */
-app.get("/admin", async (req, res) => {
+app.get("/admin", (req, res) => {
   if (!req.session.admin) return res.redirect("/admin-login");
-
-  const offers = await Offer.find().sort({ createdAt: -1 });
-
-  let html = `
-    <h1>adzduniya Admin Panel</h1>
-    <a href="/add-offer">➕ Add Offer</a> |
-    <a href="/logout">Logout</a>
-    <hr>
-  `;
-
-  if (offers.length === 0) {
-    html += "<p>No offers yet</p>";
-  } else {
-    html += "<ul>";
-    offers.forEach(o => {
-      html += `<li><b>${o.name}</b> - ${o.url}</li>`;
-    });
-    html += "</ul>";
-  }
-
-  res.send(html);
+  res.sendFile(path.join(__dirname, "public", "dashboard.html"));
 });
 
 /* ===== ADD OFFER ===== */

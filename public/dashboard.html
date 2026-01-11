@@ -1,16 +1,28 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Dashboard | adzduniya</title>
-  <link rel="stylesheet" href="/style.css">
+  <link rel="stylesheet" href="/style.css" />
 </head>
 <body>
-  <div class="login-box">
-    <h1>ADZ DUNIYA</h1>
-    <p>Admin Dashboard</p>
+  <div class="container">
+    <div class="card">
+      <div class="brand">
+        <div class="logo">AD</div>
+        <h2 class="title">adzduniya</h2>
+      </div>
+      <p class="subtitle">Admin Dashboard</p>
 
-    <a href="/add-offer">➕ Add Offer</a><br><br>
-    <a href="/logout">🚪 Logout</a>
+      <div class="nav">
+        <a class="link" href="/add-offer">➕ Add Offer</a>
+        <a class="link" href="/admin">🔄 Refresh</a>
+        <a class="link" href="/logout">🚪 Logout</a>
+      </div>
+
+      <div class="footer">Manage offers • Track leads • Grow revenue</div>
+    </div>
   </div>
 </body>
 </html>

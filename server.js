@@ -31,6 +31,14 @@ const OfferSchema = new mongoose.Schema({
 
 const Offer = mongoose.model("Offer", OfferSchema);
 
+const LeadSchema = new mongoose.Schema({
+  offerName: String,
+  upi: String,
+  createdAt: { type: Date, default: Date.now }
+});
+
+const Lead = mongoose.model("Lead", LeadSchema);
+
 /* ===== ADMIN CREDENTIALS ===== */
 const ADMIN_EMAIL = "earnfast1258000@gmail.com";
 const ADMIN_PASSWORD_HASH = bcrypt.hashSync("earnfast1258000@", 10);
@@ -91,6 +99,41 @@ app.post("/add-offer", async (req, res) => {
   await Offer.create({ name, url });
 
   res.send(`Offer Added & Saved in Database ✅<br><a href="/admin">Back to dashboard</a>`);
+});
+
+// ===== PUBLIC OFFER PAGE =====
+app.get("/:offerName", async (req, res) => {
+  const offerName = req.params.offerName;
+
+  const offer = await Offer.findOne({ name: offerName });
+
+  if (!offer) return res.send("Offer not found");
+
+  res.send(`
+    <h2>Offer: ${offer.name}</h2>
+    <form method="POST">
+      <input name="upi" placeholder="Enter your UPI ID" required />
+      <button>Continue</button>
+    </form>
+  `);
+});
+
+// ===== HANDLE UPI + REDIRECT =====
+app.post("/:offerName", async (req, res) => {
+  const offerName = req.params.offerName;
+  const { upi } = req.body;
+
+  const offer = await Offer.findOne({ name: offerName });
+  if (!offer) return res.send("Offer not found");
+
+  await Lead.create({
+    offerName,
+    upi
+  });
+
+  const redirectUrl = offer.url.replace("{upi}", encodeURIComponent(upi));
+
+  res.redirect(redirectUrl);
 });
 
 /* ===== LOGOUT ===== */

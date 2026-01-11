@@ -81,42 +81,11 @@ app.post("/add-offer", async (req, res) => {
   res.send(`Offer Added & Saved in Database ✅<br><a href="/admin">Back to dashboard</a>`);
 });
 
-// ===== PUBLIC OFFER PAGE =====
-app.get("/:offerName", async (req, res) => {
-  const offerName = req.params.offerName;
-
-  const offer = await Offer.findOne({ name: offerName });
-
-  if (!offer) return res.send("Offer not found");
-
-  res.send(`
-    <h2>Offer: ${offer.name}</h2>
-    <form method="POST">
-      <input name="upi" placeholder="Enter your UPI ID" required />
-      <button>Continue</button>
-    </form>
-  `);
-});
-
 /* ===== ALL CAMPAIGNS PAGE ===== */
 app.get("/all-campaigns", (req, res) => {
   if (!req.session.admin) return res.redirect("/admin-login");
   res.sendFile(path.join(__dirname, "public", "all-campaigns.html"));
 });
-
-/* ===== OFFERS API (for DataTable) ===== */
-app.get("/api/offers", async (req, res) => {
-  if (!req.session.admin) return res.status(401).json([]);
-
-  try {
-    const offers = await Offer.find().sort({ createdAt: -1 });
-    res.json(offers);
-  } catch (err) {
-    console.error("Offers API error:", err);
-    res.status(500).json([]);
-  }
-});
-
 
 // ===== HANDLE UPI + REDIRECT =====
 app.post("/:offerName", async (req, res) => {
@@ -149,3 +118,16 @@ app.get("/", (req, res) => {
 /* ===== START ===== */
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log("Server started on " + PORT));
+
+/* ===== OFFERS API (for DataTable) ===== */
+app.get("/api/offers", async (req, res) => {
+  if (!req.session.admin) return res.status(401).json([]);
+
+  try {
+    const offers = await Offer.find().sort({ createdAt: -1 });
+    res.json(offers);
+  } catch (err) {
+    console.error("Offers API error:", err);
+    res.status(500).json([]);
+  }
+});

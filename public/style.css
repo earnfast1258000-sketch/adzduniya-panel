@@ -32,3 +32,55 @@ body{
 .item{padding:10px;border:1px solid #1f2937;border-radius:10px;margin-bottom:8px}
 .badge{font-size:12px;color:#c7d2fe}
 .footer{text-align:center;color:var(--muted);font-size:12px;margin-top:12px}
+
+/* ===== MOBILE FIX ===== */
+@media (max-width: 768px) {
+
+  body {
+    overflow-x: hidden;
+  }
+
+  /* Sidebar */
+  .sidebar, .pc-sidebar {
+    position: fixed;
+    width: 240px;
+    transform: translateX(-100%);
+    transition: 0.3s;
+    z-index: 999;
+  }
+
+  .sidebar.active, .pc-sidebar.active {
+    transform: translateX(0);
+  }
+
+  /* Main content */
+  .pc-container, .content {
+    margin-left: 0 !important;
+    padding: 10px !important;
+  }
+
+  /* Cards layout */
+  .stats-container,
+  .row {
+    display: grid !important;
+    grid-template-columns: 1fr !important;
+    gap: 12px;
+  }
+
+  .card {
+    width: 100% !important;
+  }
+
+  /* Fix vertical text bug */
+  .vertical-text, .stats-card span {
+    writing-mode: horizontal-tb !important;
+  }
+
+  /* Header fix */
+  header, .pc-header {
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+  }
+
+}

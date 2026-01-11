@@ -1,21 +1,30 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Add Offer | adzduniya</title>
-  <link rel="stylesheet" href="/style.css">
+  <link rel="stylesheet" href="/style.css" />
 </head>
 <body>
-  <div class="login-box">
-    <h1>Add Offer</h1>
+  <div class="container">
+    <div class="card">
+      <div class="brand">
+        <div class="logo">AD</div>
+        <h2 class="title">Add Offer</h2>
+      </div>
+      <p class="subtitle">Create a new affiliate offer</p>
 
-    <form method="POST" action="/add-offer">
-      <input name="name" placeholder="Offer Name" required>
-      <input name="url" placeholder="Affiliate URL with {upi}" required>
-      <button>Add Offer</button>
-    </form>
+      <form method="POST" action="/add-offer">
+        <input class="input" name="name" placeholder="Offer Name (e.g. MobileXpression)" required />
+        <input class="input" name="url" placeholder="Affiliate URL with {upi}" required />
+        <button class="btn">Save Offer</button>
+      </form>
 
-    <br>
-    <a href="/admin">⬅ Back</a>
+      <div class="nav">
+        <a class="link" href="/admin">⬅ Back to Dashboard</a>
+      </div>
+    </div>
   </div>
 </body>
 </html>

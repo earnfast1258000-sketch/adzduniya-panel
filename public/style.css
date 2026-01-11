@@ -47,3 +47,38 @@ body {
 .login-box button:hover {
   background: #005ad1;
 }
+
+:root{
+  --bg:#0f172a;
+  --card:#0b1220;
+  --primary:#4f46e5;
+  --text:#e5e7eb;
+  --muted:#94a3b8;
+}
+*{box-sizing:border-box}
+body{
+  margin:0;min-height:100vh;font-family:Inter,system-ui,Segoe UI,Arial,sans-serif;
+  background:linear-gradient(135deg,#0f172a,#020617);
+  color:var(--text);display:flex;align-items:center;justify-content:center;
+}
+.container{width:100%;max-width:420px;padding:16px}
+.card{
+  background:rgba(11,18,32,.9);backdrop-filter:blur(8px);
+  border:1px solid #1f2937;border-radius:16px;padding:24px;
+  box-shadow:0 10px 30px rgba(0,0,0,.35)
+}
+.brand{display:flex;gap:10px;align-items:center;justify-content:center;margin-bottom:8px}
+.logo{width:36px;height:36px;border-radius:10px;background:var(--primary);display:grid;place-items:center;font-weight:800}
+.title{text-align:center;margin:0}
+.subtitle{text-align:center;color:var(--muted);margin:4px 0 16px}
+.input{width:100%;padding:12px 14px;border-radius:10px;border:1px solid #1f2937;background:#020617;color:var(--text);outline:none;margin-bottom:12px}
+.input:focus{border-color:var(--primary)}
+.btn{width:100%;padding:12px;border-radius:10px;border:none;background:var(--primary);color:#fff;font-weight:600;cursor:pointer}
+.btn:hover{filter:brightness(1.1)}
+.link{color:#a5b4fc;text-decoration:none}
+.row{display:flex;gap:10px;justify-content:space-between;align-items:center}
+.nav{display:flex;gap:12px;justify-content:center;margin-top:12px}
+.list{margin-top:12px}
+.item{padding:10px;border:1px solid #1f2937;border-radius:10px;margin-bottom:8px}
+.badge{font-size:12px;color:#c7d2fe}
+.footer{text-align:center;color:var(--muted);font-size:12px;margin-top:12px}

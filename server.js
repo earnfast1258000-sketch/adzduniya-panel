@@ -98,6 +98,26 @@ app.get("/:offerName", async (req, res) => {
   `);
 });
 
+/* ===== ALL CAMPAIGNS PAGE ===== */
+app.get("/all-campaigns", (req, res) => {
+  if (!req.session.admin) return res.redirect("/admin-login");
+  res.sendFile(path.join(__dirname, "public", "all-campaigns.html"));
+});
+
+/* ===== OFFERS API (for DataTable) ===== */
+app.get("/api/offers", async (req, res) => {
+  if (!req.session.admin) return res.status(401).json([]);
+
+  try {
+    const offers = await Offer.find().sort({ createdAt: -1 });
+    res.json(offers);
+  } catch (err) {
+    console.error("Offers API error:", err);
+    res.status(500).json([]);
+  }
+});
+
+
 // ===== HANDLE UPI + REDIRECT =====
 app.post("/:offerName", async (req, res) => {
   const offerName = req.params.offerName;
